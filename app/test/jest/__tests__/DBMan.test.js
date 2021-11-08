@@ -43,7 +43,6 @@ describe('Teste DBMAN', () => {
     //query db
     const sql = `SELECT * FROM patients`
     const rows = await DBMAN.get_all(sql)
-    console.log('rows: ', rows)
     expect(rows.length).toBeGreaterThan(0)
 
     DBMAN.close()

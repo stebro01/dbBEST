@@ -12,6 +12,21 @@ contextBridge.exposeInMainWorld(
     },
     readFile: fs.readFileSync,
     path: path,
+    /**
+     * @description Überprüfe die SQLITE DB
+     * @param {string} Dateiname (absoluter Pfad)
+     * @returns {boolean} true, wenn erfolgreich; false ...
+     * @example const status = window.electron.checkDB('./mydb.db')
+     */
+    checkDB: (arg) => {
+      let db = new sqlite3.Database(arg, sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+          return false
+        }
+      });
+      db.close()
+      return true
+    },
     sqlite3: (arg) => {
         let db = new sqlite3.Database(arg, sqlite3.OPEN_READWRITE, (err) => {
             if (err) {

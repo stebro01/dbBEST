@@ -78,6 +78,7 @@ class Settings {
     }
 
     set data(payload) {
+        console.log('SETTINGS -> data', payload)
         if (!payload) return false
         if (this._data[payload.label] === undefined) return false
         this._data[payload.label] = payload.value

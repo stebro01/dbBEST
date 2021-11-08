@@ -39,7 +39,13 @@
       </q-list>
     </q-drawer>
 
+    <!-- PAGE CONTAINER -->
     <q-page-container>
+
+    <!-- INFO BADGE -->
+    <q-badge v-if="this.$store.getters.SETTINGS" class="absolute-top-right q-mt-xl bg-grey-4 text-grey-8">{{this.$store.getters.SETTINGS.filename}}</q-badge>
+
+      <!-- ROUTER -->
       <router-view />
     </q-page-container>
   </q-layout>
@@ -50,38 +56,52 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
+    title: 'DB auswählen',
+    caption: 'wähle eine SQLITE DB im Dateisystem',
     icon: 'school',
-    link: 'https://quasar.dev'
+    link: 'selectDB'
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
+    title: 'Startseite',
+    caption: 'Startseite',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: 'start'
+  },
+    {
+    title: 'Über diese App',
+    caption: 'Infos und Disclaimer',
+    icon: 'info',
+    link: 'About'
   }
 ];
 
-import { defineComponent, ref } from 'vue'
 
-export default defineComponent({
+export default {
   name: 'MainLayout',
 
   components: {
     EssentialLink
   },
 
-  setup () {
-    const leftDrawerOpen = ref(false)
-
+    data() {
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      leftDrawerOpen: false,
+      essentialLinks: linksList
     }
+  },
+
+  mounted() {
+    this.$store.dispatch('initSettings').then(() => {
+      if (this.$store.getters.SETTINGS.filename === null) this.$router.push({name: 'selectDB'})
+    })
+  },
+
+  methods: {
+      toggleLeftDrawer () {
+        this.leftDrawerOpen = !this.leftDrawerOpen
+      }
+
   }
-})
+
+}
 </script>

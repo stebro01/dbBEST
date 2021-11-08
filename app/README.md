@@ -1,26 +1,28 @@
-# dbBEST (dbbest)
+# dbBEST (by @sb)
 
-sqliteDB and electron
+Electron-App mit sqliteDB Anbindung
 
 ## Install the dependencies
 ```bash
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Starte App zum Entwickeln
 ```bash
-quasar dev
-```
-
-### Lint the files
-```bash
-npm run lint
+npm run dev
 ```
 
 ### Build the app for production
 ```bash
-quasar build
+npm run build
 ```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+### Cypress starten
+```bash
+npm run cy
+```
+
+### JSDOC - Dokumentation erstellen (in ./docs/index.html)
+```bash
+npm run doc
+```

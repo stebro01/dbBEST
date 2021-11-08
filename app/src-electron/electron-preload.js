@@ -1,17 +1,34 @@
-/**
- * This file is used specifically for security reasons.
- * Here you can access Nodejs stuff and inject functionality into
- * the renderer thread (accessible there through the "window" object)
- *
- * WARNING!
- * If you import anything from node_modules, then make sure that the package is specified
- * in package.json > dependencies and NOT in devDependencies
- *
- * Example (injects window.myAPI.doAThing() into renderer thread):
- *
- *   import { contextBridge } from 'electron'
- *
- *   contextBridge.exposeInMainWorld('myAPI', {
- *     doAThing: () => {}
- *   })
- */
+const { contextBridge, ipcRenderer } = require('electron')
+const fs = require('fs')
+const path = require('path')
+const sqlite3 = require('sqlite3').verbose()
+
+contextBridge.exposeInMainWorld(
+  'electron',
+  {
+    doThing: () => {
+        ipcRenderer.send('do-a-thing')
+        console.log('hi')
+    },
+    readFile: fs.readFileSync,
+    path: path,
+    sqlite3: (arg) => {
+        let db = new sqlite3.Database(arg, sqlite3.OPEN_READWRITE, (err) => {
+            if (err) {
+              console.error(err.message);
+            }
+        });
+
+        db.each(`SELECT * FROM patients`, (err, row) => {
+            if (err) {
+                console.error(err.message);
+            }
+            console.log(row.id + "\t" + row.name);
+        });
+
+
+        return db
+        
+    }
+  }
+)

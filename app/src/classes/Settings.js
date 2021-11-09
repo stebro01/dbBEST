@@ -27,13 +27,7 @@ class Settings {
         if (this._data !== undefined) return true
 
         // 2. Stelle Standardeinstellungen her
-        const data = {
-            filename: null,
-            user: null,
-            password: null
-        }
-        this._data = data
-
+        this.clear()
         // 3. Speichere Einstellungen
         this.save()
 
@@ -66,7 +60,12 @@ class Settings {
      * @description Leert die Einstellungen
      */
     clear() {
-        this._data = undefined
+        const data = {
+            filename: null,
+            user: null,
+            password: null
+        }
+        this._data = data
     }
 
     /**
@@ -77,6 +76,9 @@ class Settings {
         return this._data
     }
 
+    /**
+     * @example SETTINGS.data = {filename: './db.db'}
+     */
     set data(payload) {
         console.log('SETTINGS -> data', payload)
         if (!payload) return false

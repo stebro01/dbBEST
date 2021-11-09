@@ -1,11 +1,18 @@
+import store from "src/store/index"
+
+function beforeEnterFunc (to, from, next) {
+  if (!store.getters.SETTINGS || store.getters.SETTINGS.filename === null) next({ name: 'selectDB' })
+  else next()
+}
 
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'start', component: () => import('pages/Index.vue') },
+      { path: '', name: 'start', component: () => import('pages/Index.vue'), beforeEnter: beforeEnterFunc },
       { path: 'selectdb', name: 'selectDB', component: () => import('pages/SelectDB.vue') },
+      { path: 'settings', name: 'Settings', component: () => import('pages/Settings.vue') },
       { path: 'about', name: 'About', component: () => import('pages/About.vue') }
     ]
   },

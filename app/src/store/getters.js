@@ -5,3 +5,7 @@ export function ENV(state) {
 export function SETTINGS(state) {
     return state.SETTINGS.data
 }
+
+export function CONNECTED(state) {
+    return state.connected
+}

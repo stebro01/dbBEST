@@ -11,8 +11,6 @@
  * npm run test:unit test/jest/__tests__/DBMan.test.js 
  */
 
-
-
 import {DBMAN} from "src/classes/DBMan"
 
 const filename = "/Users/ste/MyProjects/dbBEST/dbase/mydb.db"

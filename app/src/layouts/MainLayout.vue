@@ -43,7 +43,9 @@
     <q-page-container>
 
     <!-- INFO BADGE -->
-    <q-badge v-if="this.$store.getters.SETTINGS" class="absolute-top-right q-mt-xl bg-grey-4 text-grey-8">{{this.$store.getters.SETTINGS.filename}}</q-badge>
+    <q-badge v-if="this.$store.getters.SETTINGS" 
+      class="absolute-top-right q-mt-xl  text-grey-8" 
+      :class="{'bg-green-4': $store.getters.CONNECTED, 'bg-grey-3': !$store.getters.CONNECTED}">{{this.$store.getters.SETTINGS.filename}}</q-badge>
 
       <!-- ROUTER -->
       <router-view />
@@ -66,6 +68,12 @@ const linksList = [
     caption: 'Startseite',
     icon: 'code',
     link: 'start'
+  },
+  {
+    title: 'Einstellungen',
+    caption: 'DB, Nutzer etc.',
+    icon: 'settings',
+    link: 'Settings'
   },
     {
     title: 'Über diese App',
@@ -91,9 +99,7 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('initSettings').then(() => {
-      if (this.$store.getters.SETTINGS.filename === null) this.$router.push({name: 'selectDB'})
-    })
+    this.$store.dispatch('initSettings')
   },
 
   methods: {

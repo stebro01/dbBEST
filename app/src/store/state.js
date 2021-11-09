@@ -4,6 +4,7 @@ import {SETTINGS} from 'src/classes/Settings'
 export default function () {
     return {
       ENV,
-      SETTINGS
+      SETTINGS,
+      connected: false
     }
   }

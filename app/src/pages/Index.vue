@@ -7,10 +7,14 @@
         <q-btn @click="closeDB">close</q-btn>
       </div>
 
-      <div class="col q-mt-md">
-        DB abfragen
-        <q-btn @click="queryDB">query</q-btn>
-        <div>{{queryresult}}</div>
+      <div v-for="dbname in dbases" :key="dbname" class="col q-mt-md">
+        DB: {{dbname}} abfragen
+        <q-btn @click="queryDB(dbname)">query</q-btn>
+        <div>
+          <div v-for="(item, ind) in queryresult[dbname]" :key="item+ind+dbname">
+            {{item}}
+          </div>
+        </div>
       </div>
 
     </div>
@@ -25,7 +29,8 @@ export default {
 
   data() {
     return {
-      queryresult: null
+      queryresult: {},
+      dbases: ['patients', 'user', 'visits']
     }
   },
 
@@ -40,10 +45,10 @@ export default {
       .then(res => this.$q.notify(res)) 
       .catch(err => this.$q.notify(err)) 
     },
-    queryDB() {
-      this.$store.dispatch('queryDB', 'SELECT * FROM patients')
+    queryDB(dbname) {
+      this.$store.dispatch('queryDB', `SELECT * FROM ${dbname}`)
       .then(res => {
-        this.queryresult = res
+        this.queryresult[dbname] = res
         }) 
       .catch(err => {
         console.error(err)

@@ -63,7 +63,8 @@ class Settings {
         const data = {
             filename: null,
             user: null,
-            password: null
+            password: null,
+            show_hidden: false
         }
         this._data = data
     }

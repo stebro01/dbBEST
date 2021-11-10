@@ -9,11 +9,14 @@
         <!-- RENDER ENTRIES -->
         <q-card-section class="q-pt-none">
             <div v-for="(item, ind) in FIELDS" :key="ind+item">
-                <span v-if="item !== 'id'">
+                <span v-if="item === 'coding'">
+                    <EDIT_CODING  :coding="local_data[item]" @updateEntry="updateCodingEntry(item, $event)"/>
+                </span>
+                <span v-else-if="item !== 'id'">
                     <q-input dense :label="item" v-model="local_data[item]" 
-                        :disable="item === 'protected' && local_data[item]" 
+                        :disable="(item === 'protected') && (local_data[item] === 1)" 
                     />
-                    <span v-if="item === 'protected' && local_data[item]" class="text-caption text-grey-5">Geschützte Einträge können nur direkt über ein SQLITE Tool gelöscht werden</span>
+                    <span v-if="(item === 'protected') && (local_data[item] === 1)" class="text-caption text-grey-5">Geschützte Einträge können nur direkt über ein SQLITE Tool gelöscht werden</span>
                 </span>
             </div>
           
@@ -29,8 +32,14 @@
 </template>
 
 <script>
+import EDIT_CODING from 'src/components/EditCoding.vue'
+
+
 export default {
+    name: 'EditEntry',
     props: ['active', 'edit_content', 'table'],
+
+    components: { EDIT_CODING },
 
     data() {
         return {
@@ -64,6 +73,9 @@ export default {
     methods: {
         saveChanges() {
             this.$emit('save', this.local_data)
+        },
+        updateCodingEntry(item, val) {
+            this.local_data[item] = val
         }
     }
 

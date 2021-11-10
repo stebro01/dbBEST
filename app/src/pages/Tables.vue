@@ -13,10 +13,13 @@
           @editItem="editItem($event)"
           @addItem="addItem()"
           :data="queryresult" :datenow="datenow" :title="'Tables'"
+          :show_hidden="show_hiden"
         />
         
       </div>
-
+      <div class="col text-right q-mt-xl text-grey-7">
+        <q-toggle v-model="show_hiden" label="zeige versteckte an" @click="toggle_show_hidden" />
+      </div>
     </div>
 
     <!-- THE MODAL TO EDIT ENTRIES -->
@@ -49,7 +52,8 @@ export default {
       datenow: Date.now(),
       table: 'coding',
       edit_is_active: false,
-      edit_content: undefined
+      edit_content: undefined,
+      show_hiden: this.$store.getters.SETTINGS.show_hidden
     }
   },
 
@@ -123,6 +127,10 @@ export default {
         }) 
       .catch(err => this.$q.notify(err)) 
       this.closeEdit()
+    },
+
+    toggle_show_hidden() {
+      this.$store.commit('SETTINGS_SET', {label: 'show_hidden', value: this.show_hiden})
     }
   }
 

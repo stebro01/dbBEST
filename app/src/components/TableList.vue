@@ -9,7 +9,9 @@
 
     <q-list v-if="data && shrink" bordered>
     <!-- START Q_ITEM -->
-      <q-item v-for="(item, ind) in data" :key="ind + datenow" class="q-my-sm my-list-item">
+     <div v-for="(item, ind) in data" :key="ind + datenow">
+      <q-item v-if="item.hide !== 1 || show_hidden" class="q-my-sm my-list-item">
+       
         <q-item-section avatar>
           <q-avatar color="primary" text-color="white">
             {{ item.id }}
@@ -20,7 +22,11 @@
         <q-item-section v-if="item.table">
           <q-item-label>{{ item.table }}</q-item-label>
           <q-item-label caption lines="1">system: {{ item.system }}</q-item-label>
-          <q-item-label caption lines="1">coding: {{ item.coding }}</q-item-label>
+          <q-item-label caption lines="1">coding:
+            <span v-for="(cc,indc) in JSON.parse(item.coding)" :key="indc+'coding'">
+              {{cc.label}}({{cc.type}}),
+            </span>
+          </q-item-label>
         </q-item-section>
         <!-- else -->
         <q-item-section v-else>
@@ -38,7 +44,7 @@
 
     <!-- END Q_ITEM -->
       </q-item>
-
+     </div>
     </q-list>
   </div>
 </template>
@@ -47,7 +53,7 @@
 export default {
     name: 'TABLE_LIST',
 
-    props: ['data', 'datenow', 'title'],
+    props: ['data', 'datenow', 'title', 'show_hidden'],
 
     data() {
     return {

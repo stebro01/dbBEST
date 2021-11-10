@@ -62,3 +62,56 @@ export function queryDB ({}, payload) {
     console.log('action -> queryDB: ', payload)
     return window.electron.dbman.get_all(payload)
 }
+
+/**
+ * 
+ * @description Löscht einen DB Eintrag (mit ID spezifiziert) aus einem Table
+ * @param {object} payload - {table: 'string of table name', id: 'ID of entry to delete'}
+ * @example this.$store.dispatch('deleteDBEntry', {table: this.table, id: payload.id})
+ * @returns Promise > resolve (if success), and reject (else)
+ */
+export function deleteDBEntry({}, payload) {
+    console.log('action -> queryDB: ', payload)
+    const sqlquery = `DELETE FROM ${payload.table} WHERE id = ${payload.id}`
+    return window.electron.dbman.run(sqlquery)
+}
+
+/**
+ * 
+ * @description Fügt einen leeren Eintrag in einen Table hinzu
+ * @param {object} payload - {table: 'string of table name'}
+ * @example this.$store.dispatch('addDBEntry', {table: 'coding'})
+ * @returns Promise > resolve (if success), and reject (else)
+ */
+ export function addDBEntry({}, payload) {
+    console.log('action -> addDBEntry: ', payload)
+    const sqlquery = `INSERT INTO ${payload.table} DEFAULT VALUES`
+    return window.electron.dbman.run(sqlquery)
+}
+
+/**
+ * 
+ * @description Update eine ROW eines Tables entsprechend einer ID
+ * @param {object} payload - {table: 'string of table name', id: ID als Integer, values: {object}}
+ * @example this.$store.dispatch('updateDBEntry', {table: this.table, values: payload, id: 1})
+ * @returns Promise > resolve (if success), and reject (else)
+ */
+ export function updateDBEntry({}, payload) {
+    console.log('action -> updateDBEntry: ', payload)
+    let values = null
+    Object.keys(payload.values).forEach(item => {
+       if (item !== 'id') {
+           let val = payload.values[item]
+           if (val !== null) {
+                if (typeof(val) === 'string') val = `'${val}'`
+                else if (typeof(val) === 'number') {/**do nothing */}
+                else console.error(`ERROR: type ${typeof(val)} of ${item} not supported`)
+                item = '`' + item + '`'
+               if (values === null) values = `${item}=${val}`
+               else values = `${values}, ${item}=${val}`
+            }
+       } 
+    })
+    const sqlquery = `UPDATE ${payload.table} SET ${values} WHERE id= ${payload.id}`
+    return window.electron.dbman.run(sqlquery)
+}

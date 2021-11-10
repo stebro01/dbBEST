@@ -1,20 +1,10 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="column">
-      <div class="col">
-        Datenbank verbinden
-        <q-btn @click="connectDB">connect</q-btn>
-        <q-btn @click="closeDB">close</q-btn>
-      </div>
+    <div class="column text-center">
 
       <div v-for="dbname in dbases" :key="dbname" class="col q-mt-md">
-        DB: {{dbname}} abfragen
-        <q-btn @click="queryDB(dbname)">query</q-btn>
-        <div>
-          <div v-for="(item, ind) in queryresult[dbname]" :key="item+ind+dbname">
-            {{item}}
-          </div>
-        </div>
+        <TABLE_LIST @refresh="queryDB(dbname)" :data="queryresult[dbname]" :datenow="datenow" :title="dbname"/>
+        
       </div>
 
     </div>
@@ -23,6 +13,7 @@
 </template>
 
 <script>
+import TABLE_LIST from 'src/components/TableList.vue'
 
 export default {
   name: 'Index',
@@ -30,7 +21,16 @@ export default {
   data() {
     return {
       queryresult: {},
-      dbases: ['patients', 'user', 'visits']
+      dbases: this.$store.getters.ENV.main_tables_list,
+      datenow: Date.now(),
+    }
+  },
+
+  components: { TABLE_LIST },
+
+  computed: {
+    MAIN_TABLES() {
+      return this.$store.getters.ENV.main_tables
     }
   },
 
@@ -46,6 +46,7 @@ export default {
       .catch(err => this.$q.notify(err)) 
     },
     queryDB(dbname) {
+      console.log(dbname)
       this.$store.dispatch('queryDB', `SELECT * FROM ${dbname}`)
       .then(res => {
         this.queryresult[dbname] = res

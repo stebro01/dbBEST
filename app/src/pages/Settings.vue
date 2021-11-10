@@ -27,7 +27,10 @@ export default {
 
   methods: {
     clearSettings() {
-      this.$store.dispatch('clearSettings').then(res => this.$q.notify(res)) 
+      this.$store.dispatch('clearSettings').then(res => {
+        this.$store.dispatch('closeDB')
+        this.$q.notify(res)
+      })
       this.$router.push({name: 'selectDB'})
     }
     

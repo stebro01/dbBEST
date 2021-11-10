@@ -44,9 +44,19 @@
 
     <!-- INFO BADGE -->
     <q-badge v-if="this.$store.getters.SETTINGS" 
-      class="absolute-top-right q-mt-xl  text-grey-8" 
-      :class="{'bg-green-4': $store.getters.CONNECTED, 'bg-grey-3': !$store.getters.CONNECTED}">{{this.$store.getters.SETTINGS.filename}}</q-badge>
+      class="z-top absolute-top-right q-mt-xl  text-grey-8" 
+      :class="{'bg-green-4': $store.getters.CONNECTED, 'bg-grey-3': !$store.getters.CONNECTED}"
+      @click="connectDB()"
+      >
+        <span class="q-mr-xs">
+        <q-icon v-if="$store.getters.CONNECTED" name="link"/>
+        <q-icon v-else name="link_off"/>
+        </span>
 
+        <span>{{this.$store.getters.SETTINGS.filename}}</span>
+        
+        
+      </q-badge>
       <!-- ROUTER -->
       <router-view />
     </q-page-container>
@@ -68,6 +78,12 @@ const linksList = [
     caption: 'Startseite',
     icon: 'code',
     link: 'start'
+  },
+  {
+    title: 'Tables verwalten',
+    caption: 'verwaltet den Table `coding` in der SQLITE DB',
+    icon: 'toc',
+    link: 'Tables'
   },
   {
     title: 'Einstellungen',
@@ -99,12 +115,17 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('initSettings')
+    console.log('mounted')
+    if (this.$store.getters.SETTINGS) this.$store.dispatch('connectDB')
   },
 
   methods: {
       toggleLeftDrawer () {
         this.leftDrawerOpen = !this.leftDrawerOpen
+      },
+      connectDB() {
+        if (!this.$store.getters.CONNECTED) this.$store.dispatch('connectDB').catch(err => this.$q.notify(err))
+        else this.$store.dispatch('closeDB')
       }
 
   }

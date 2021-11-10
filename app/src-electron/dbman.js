@@ -54,9 +54,22 @@ const get_all = async (sql_query) => {
     })
 }
   
+const run = async (sql_query) => {
+    console.log('dbman -> run: '+sql_query)
+    return new Promise((resolve, reject) => {
+        database.run(sql_query, function(err) {
+        if (err) {
+            console.error(err.message);
+            return reject(err)
+        }
+        return resolve('SQL: Aktion erfolgreich')
+        })
+    })
+}
 
 
 // EXPORT THE MODULES
 exports.connect = connect;
 exports.close = close;
 exports.get_all = get_all;
+exports.run = run;

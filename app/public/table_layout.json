@@ -1,0 +1,13 @@
+{
+    "coding": [
+        {"label": "id", "type": "number", "system": null, "code": null ,"default": null},
+        {"label": "table", "type": "number", "system": "snomed", "code": 722111000000107 ,"default": null},
+        {"label": "coding", "type": "json", "system": null, "code": null ,"default": null},
+        {"label": "protected", "type": "binary", "system": null, "code": null ,"default": false}
+    ],
+    "coding_text": "[{\"label\":\"id\",\"type\":\"number\",\"system\":null,\"code\":null,\"default\":null},{\"label\":\"table\",\"type\":\"number\",\"system\":\"snomed\",\"code\":722111000000107,\"default\":null},{\"label\":\"coding\",\"type\":\"json\",\"system\":null,\"code\":null,\"default\":null},{\"label\":\"protected\",\"type\":\"binary\",\"system\":null,\"code\":null,\"default\":false}]",
+    
+    "user": [],
+    "user_text": ""
+
+}

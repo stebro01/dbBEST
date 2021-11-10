@@ -67,12 +67,7 @@
 import EssentialLink from 'components/EssentialLink.vue'
 
 const linksList = [
-  {
-    title: 'DB auswählen',
-    caption: 'wähle eine SQLITE DB im Dateisystem',
-    icon: 'school',
-    link: 'selectDB'
-  },
+
   {
     title: 'Startseite',
     caption: 'Startseite',
@@ -80,10 +75,22 @@ const linksList = [
     link: 'start'
   },
   {
+    title: 'Patienten',
+    caption: 'suchen, anlegen, Visiten planen',
+    icon: 'person',
+    link: 'Patients'
+  },
+  {
     title: 'Tables verwalten',
     caption: 'verwaltet den Table `coding` in der SQLITE DB',
     icon: 'toc',
     link: 'Tables'
+  },
+  {
+    title: 'DB auswählen',
+    caption: 'wähle eine SQLITE DB im Dateisystem',
+    icon: 'school',
+    link: 'selectDB'
   },
   {
     title: 'Einstellungen',

@@ -85,7 +85,30 @@ export function deleteDBEntry({}, payload) {
  */
  export function addDBEntry({}, payload) {
     console.log('action -> addDBEntry: ', payload)
-    const sqlquery = `INSERT INTO ${payload.table} DEFAULT VALUES`
+    let sqlquery = undefined
+    if (!payload.values) sqlquery = `INSERT INTO ${payload.table} DEFAULT VALUES`
+    else {
+
+    //     INSERT INTO "main"."patients"
+    //     ("name", "first_name", "birthdate", "sex")
+    // VALUES ('Jim', 'John', '12.11.2021', 'male');
+
+        let fields = undefined
+        let values = undefined
+        Object.keys(payload.values).forEach(key => {
+            let val = payload.values[key]
+            if (val) {
+                if (!fields) fields = `"${key}"`
+                else fields += `, "${key}"`
+                if (typeof(val) === 'string') val = `'${val}'`
+                if (!values) values = `${val}`
+                else values += `, ${val}`
+            }
+        })
+
+        if (fields) sqlquery = `INSERT INTO ${payload.table} (${fields}) VALUES (${values})`
+    }
+    if (!sqlquery) return false
     return window.electron.dbman.run(sqlquery)
 }
 
@@ -114,4 +137,16 @@ export function deleteDBEntry({}, payload) {
     })
     const sqlquery = `UPDATE ${payload.table} SET ${values} WHERE id= ${payload.id}`
     return window.electron.dbman.run(sqlquery)
+}
+
+/**
+ * 
+ * @description führt eine vorbereite SQL Anfrage durch
+ * @param {string} payload - SQL Anfrage als string
+ * @example this.$store.dispatch('runQueryDB', 'SELECT * FROM patients WHERE id=1')
+ * @returns Promise > resolve (if success), and reject (else)
+ */
+ export function runQueryDB({}, payload) {
+    console.log('action -> runQueryDB: ', payload)
+    return window.electron.dbman.get_all(payload)
 }

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <q-toolbar class="bg-primary text-white shadow-2">
+    <q-toolbar class="bg-primary text-white shadow-2 my-list-item">
       <q-toolbar-title>{{title}}</q-toolbar-title>
-      <q-btn v-if="this.data" flat @click="toogleShrink" :icon="shrink_icon"/>
-      <q-btn v-if="this.data" flat @click="this.$emit('addItem')" icon="add"/>
-      <q-btn flat @click="this.$emit('refresh')" icon="refresh"/>
+      <q-btn v-if="data && !no_refresh" flat @click="toogleShrink" :icon="shrink_icon"/>
+      <q-btn v-if="data && !no_add" flat @click="this.$emit('addItem')" icon="add"/>
+      <q-btn v-if="!no_refresh" flat @click="this.$emit('refresh')" icon="refresh"/>
     </q-toolbar>
 
     <q-list v-if="data && shrink" bordered>
@@ -28,6 +28,13 @@
             </span>
           </q-item-label>
         </q-item-section>
+        <!-- PATIENTS MODE -->
+        <q-item-section v-else-if="mode === 'patients'">
+          <q-item-label>
+            {{item.name}}, {{item.first_name}} / {{item.gender}} [id = {{item.id}}]
+          </q-item-label>
+          <q-item-label caption>geb. {{item.birthdate}}</q-item-label>
+        </q-item-section>
         <!-- else -->
         <q-item-section v-else>
           <q-item-label caption>{{ item }}</q-item-label>
@@ -35,9 +42,12 @@
 
         <!-- side -->
         <q-item-section side>
-          <div>
+          <div v-if="!view_only">
             <q-btn v-if="!item.protected" @click="this.$emit('deleteItem', {id: item.id, index: ind})" flat icon="delete"/>
             <q-btn @click="this.$emit('editItem', {id: item.id, index: ind})" flat icon="edit"/>
+          </div>
+          <div v-if="mode==='patients'">
+            <q-btn @click="this.$emit('openItemVisits', {id: item.id, index: ind})" flat icon="tour"><q-tooltip>Öffne Visiten des Patienten</q-tooltip> </q-btn>
           </div>
         </q-item-section>
 
@@ -53,7 +63,7 @@
 export default {
     name: 'TABLE_LIST',
 
-    props: ['data', 'datenow', 'title', 'show_hidden'],
+    props: ['data', 'datenow', 'title', 'show_hidden', 'no_refresh', 'no_add', 'view_only', 'mode'],
 
     data() {
     return {
@@ -75,7 +85,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

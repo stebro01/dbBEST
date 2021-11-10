@@ -60,11 +60,12 @@ class Settings {
      * @description Leert die Einstellungen
      */
     clear() {
-        const data = {
+        const data = { //values should be initialized with null!!!
             filename: null,
             user: null,
             password: null,
-            show_hidden: false
+            show_hidden: false,
+            search: null
         }
         this._data = data
     }
@@ -81,7 +82,7 @@ class Settings {
      * @example SETTINGS.data = {filename: './db.db'}
      */
     set data(payload) {
-        console.log('SETTINGS -> data', payload)
+        console.log('Settings -> data', payload)
         if (!payload) return false
         if (this._data[payload.label] === undefined) return false
         this._data[payload.label] = payload.value

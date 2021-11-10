@@ -2,18 +2,20 @@
   <q-page class="flex flex-center">
     <div class="column text-center">
 
-      <div v-for="dbname in dbases" :key="dbname" class="col q-mt-md">
-        <TABLE_LIST @refresh="queryDB(dbname)" :data="queryresult[dbname]" :datenow="datenow" :title="dbname"/>
-        
-      </div>
+      <div class="col q-mb-xl">May the force be with you.</div>
 
+      <div class="col q-gutter-xl">
+        <q-btn color="primary" no-caps @click="$router.push({name: 'Patients'})">Patienten suchen und eine Viste planen</q-btn>
+        <q-btn color="primary" no-caps @click="commingSoon()">Studienansicht - Innerhalb einer Studie nach Patienten suchen</q-btn>
+        <q-btn color="primary" no-caps @click="commingSoon()">Summaries / Zusammenfassung erstellen</q-btn>
+      </div>
+      
     </div>
     
   </q-page>
 </template>
 
 <script>
-import TABLE_LIST from 'src/components/TableList.vue'
 
 export default {
   name: 'Index',
@@ -21,42 +23,20 @@ export default {
   data() {
     return {
       queryresult: {},
-      dbases: this.$store.getters.ENV.main_tables_list,
       datenow: Date.now(),
     }
   },
 
-  components: { TABLE_LIST },
+  components: {  },
 
   computed: {
-    MAIN_TABLES() {
-      return this.$store.getters.ENV.main_tables
-    }
+
   },
 
   methods: {
-    closeDB() {
-      this.$store.dispatch('closeDB')
-      .then(res => this.$q.notify(res)) 
-      .catch(err => this.$q.notify(err)) 
-    },
-    connectDB() {
-      this.$store.dispatch('connectDB')
-      .then(res => this.$q.notify(res)) 
-      .catch(err => this.$q.notify(err)) 
-    },
-    queryDB(dbname) {
-      console.log(dbname)
-      this.$store.dispatch('queryDB', `SELECT * FROM ${dbname}`)
-      .then(res => {
-        this.queryresult[dbname] = res
-        }) 
-      .catch(err => {
-        console.error(err)
-        this.$q.notify('Anfrage war nicht erfolgreich.')
-      }) 
+    commingSoon() {
+      this.$q.notify('Comming soon ...')
     }
-    
   }
 
 }

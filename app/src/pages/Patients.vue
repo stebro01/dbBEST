@@ -50,7 +50,7 @@
 
 <script>
 import TABLE_LIST from 'src/components/TableList.vue'
-import {prepareSQLSearch} from 'src/classes/sqltools.js'
+import myMixins from 'src/mixins/modes'
 
 export default {
   name: 'Patients',
@@ -68,6 +68,8 @@ export default {
 
   components: { TABLE_LIST },
 
+    mixins: [myMixins], //imports: searchSQL
+
   mounted() {
       const presearch = this.$store.getters.SETTINGS.search
       if (presearch !== null && presearch !== undefined) this.search = presearch
@@ -81,20 +83,14 @@ export default {
         searchPatient() {
             //check the input
             if (this.search.gender === 'null') this.search.gender = null
-            const where_string = prepareSQLSearch(this.search)
-            if (!where_string) return this.$q.notify('Suchanfrage ist leer')
-            //build the string
-            const sqlquery = `SELECT * FROM ${this.dbname} WHERE ${where_string} ORDER BY name`
-            this.$store.dispatch('runQueryDB', sqlquery)
+            this.searchSQL(this.search, this.dbname, 'ORDER BY name')
             .then(res => {
                 this.queryresult = res
-                if (res.length === 0) this.$q.notify('Keinen Patienten gefunden.')
+                if (this.queryresult.length === 0) return this.$q.notify('Keinen Patienten gefunden.')
                 this.$store.commit('SETTINGS_SET', {label: 'search', value: JSON.parse(JSON.stringify(this.search))})
-                }) 
-            .catch(err => {
-                console.error(err)
-                this.$q.notify('Anfrage war nicht erfolgreich.')
-            }) 
+            })
+            .catch(err => this.$q.notify(err))
+            
         },
 
         clearSearch() {

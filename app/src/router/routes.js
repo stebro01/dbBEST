@@ -14,6 +14,7 @@ const routes = [
       { path: 'tables', name: 'Tables', component: () => import('pages/Tables.vue'), beforeEnter: beforeEnterFunc },
       { path: 'patients', name: 'Patients', component: () => import('pages/Patients.vue'), beforeEnter: beforeEnterFunc },
       { path: 'visits/:id', name: 'Visits', component: () => import('pages/Visits.vue'), beforeEnter: beforeEnterFunc },
+      { path: 'editvisit/:id', name: 'EditVisit', component: () => import('pages/EditVisit.vue'), beforeEnter: beforeEnterFunc },
       { path: 'selectdb', name: 'selectDB', component: () => import('pages/SelectDB.vue') },
       { path: 'settings', name: 'Settings', component: () => import('pages/Settings.vue') },
       { path: 'about', name: 'About', component: () => import('pages/About.vue') }

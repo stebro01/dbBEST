@@ -1,3 +1,9 @@
+import { date } from 'quasar'
+
+export function get_date_from_timeStamp(timeStamp) {
+    return date.formatDate(timeStamp, 'YYYY-MM-DD')
+}
+
 export function prepareSQLSearch(payload) {
     let where_string = undefined
     Object.keys(payload).forEach(key => {

@@ -62,7 +62,8 @@ const run = async (sql_query) => {
             console.error(err.message);
             return reject(err)
         }
-        return resolve('SQL: Aktion erfolgreich')
+        
+        return resolve({message: 'SQL: Aktion erfolgreich', status: true, data: this.lastID})
         })
     })
 }

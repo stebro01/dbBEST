@@ -9,3 +9,7 @@ export function SETTINGS(state) {
 export function CONNECTED(state) {
     return state.connected
 }
+
+export function ISADMIN(state) {
+    return false
+}

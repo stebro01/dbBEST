@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0qsu2d4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="Process_1r6422g" isExecutable="true">
+    <bpmn:task id="Activity_04hr2et" name="Patienten auswählen oder neu erstellen">
+      <bpmn:outgoing>Flow_1jd9fxe</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1ua7b3f" name="Visiten anzeigen">
+      <bpmn:incoming>Flow_1jd9fxe</bpmn:incoming>
+      <bpmn:outgoing>Flow_06g83vd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1jd9fxe" sourceRef="Activity_04hr2et" targetRef="Activity_1ua7b3f" />
+    <bpmn:task id="Activity_0q8cogn" name="Neue Visite erstellen oder bestehende Öffnen">
+      <bpmn:incoming>Flow_06g83vd</bpmn:incoming>
+      <bpmn:outgoing>Flow_128lsms</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_06g83vd" sourceRef="Activity_1ua7b3f" targetRef="Activity_0q8cogn" />
+    <bpmn:task id="Activity_0nh7b8k" name="Visite eines Patienten ist geöffnet">
+      <bpmn:incoming>Flow_128lsms</bpmn:incoming>
+      <bpmn:outgoing>Flow_0atbwz1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_128lsms" sourceRef="Activity_0q8cogn" targetRef="Activity_0nh7b8k" />
+    <bpmn:task id="Activity_16c355m" name="Quests / Scores können hinzugefügt werden">
+      <bpmn:incoming>Flow_0atbwz1</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0atbwz1" sourceRef="Activity_0nh7b8k" targetRef="Activity_16c355m" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1r6422g">
+      <bpmndi:BPMNEdge id="Flow_1jd9fxe_di" bpmnElement="Flow_1jd9fxe">
+        <di:waypoint x="270" y="120" />
+        <di:waypoint x="320" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06g83vd_di" bpmnElement="Flow_06g83vd">
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="470" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_128lsms_di" bpmnElement="Flow_128lsms">
+        <di:waypoint x="570" y="120" />
+        <di:waypoint x="620" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0atbwz1_di" bpmnElement="Flow_0atbwz1">
+        <di:waypoint x="720" y="120" />
+        <di:waypoint x="770" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_04hr2et_di" bpmnElement="Activity_04hr2et">
+        <dc:Bounds x="170" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ua7b3f_di" bpmnElement="Activity_1ua7b3f">
+        <dc:Bounds x="320" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0q8cogn_di" bpmnElement="Activity_0q8cogn">
+        <dc:Bounds x="470" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nh7b8k_di" bpmnElement="Activity_0nh7b8k">
+        <dc:Bounds x="620" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16c355m_di" bpmnElement="Activity_16c355m">
+        <dc:Bounds x="770" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -58,6 +58,12 @@ export function closeDB ({commit}) {
     }) 
 }
 
+/**
+ * @description Führt eine einfache SQL Query aus
+ * @param {object} payload - string with the SQL Query 
+ * @example this.$store.dispatch('queryDB', `SELECT * FROM ${this.table}`)
+ * @returns a promise for the results (array)
+ */
 export function queryDB ({}, payload) {
     console.log('action -> queryDB: ', payload)
     return window.electron.dbman.get_all(payload)
@@ -149,4 +155,15 @@ export function deleteDBEntry({}, payload) {
  export function runQueryDB({}, payload) {
     console.log('action -> runQueryDB: ', payload)
     return window.electron.dbman.get_all(payload)
+}
+
+/**
+ * @description führt eine vorbereite SQL Aktion durch, ie: Visits.vue / setProtected
+ * @param {string} payload - SQL Aktion als Sting: ie: UPDATE visits SET protected=true WHERE id=1
+ * @example this.$store.dispatch('runUpdateDB', 'UPDATE visits SET protected=true WHERE id=1')
+ * @returns Promise > resolve (if success), and reject (else)
+ */
+export function runUpdateDB({}, payload) {
+    console.log('action -> runUpdateDB: ', payload)
+    return window.electron.dbman.run(payload)
 }

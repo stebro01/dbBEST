@@ -2,30 +2,34 @@
     <q-dialog v-model="prompt" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Eintrag ändern</div>
-          <div class="text-caption" v-if="local_data">Table: {{table}} / ID: {{local_data.id}}</div>
+          <div class="text-h6"><q-icon v-if="PROTECTED" name="lock"/>Eintrag ändern</div>
+          
+          <div class="text-caption" v-if="local_data">ID: {{local_data.id}}</div>
+          
         </q-card-section>
 
         <!-- RENDER ENTRIES -->
         <q-card-section class="q-pt-none">
             <div v-for="(item, ind) in FIELDS" :key="ind+item">
+                
                 <span v-if="item === 'coding'">
-                    <EDIT_CODING  :coding="local_data[item]" @updateEntry="updateCodingEntry(item, $event)"/>
+                    <EDIT_CODING  :PROTECTED="PROTECTED" :coding="local_data[item]" @updateEntry="updateCodingEntry(item, $event)"/>
                 </span>
                 <span v-else-if="item !== 'id'">
                     <q-input dense :label="item" v-model="local_data[item]" 
-                        :disable="(item === 'protected') && (local_data[item] === 1)" 
+                        :disable="PROTECTED" 
                     />
-                    <span v-if="(item === 'protected') && (local_data[item] === 1)" class="text-caption text-grey-5">Geschützte Einträge können nur direkt über ein SQLITE Tool gelöscht werden</span>
+                    
                 </span>
             </div>
+            <span v-if="PROTECTED" class="text-caption text-grey-5">Geschützte Einträge können nur direkt über ein SQLITE Tool gelöscht werden</span>
           
         </q-card-section>
 
         <!-- SAVE AND CLOSE -->
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Speichern" @click="saveChanges" />
+          <q-btn v-if="!PROTECTED" flat label="Speichern" @click="saveChanges" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -37,7 +41,7 @@ import EDIT_CODING from 'src/components/EditCoding.vue'
 
 export default {
     name: 'EditEntry',
-    props: ['active', 'edit_content', 'table'],
+    props: ['active', 'edit_content'],
 
     components: { EDIT_CODING },
 
@@ -67,6 +71,10 @@ export default {
         FIELDS() {
             if (!this.local_data) return undefined
             return Object.keys(this.local_data)
+        },
+        PROTECTED() {
+            if (!this.local_data) return true
+            return (this.local_data.protected === 1)
         }
     },
 

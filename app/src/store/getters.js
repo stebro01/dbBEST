@@ -13,3 +13,7 @@ export function CONNECTED(state) {
 export function ISADMIN(state) {
     return false
 }
+
+export function QUESTS_PRESETS(state) {
+    return state.QUESTS_PRESETS
+}

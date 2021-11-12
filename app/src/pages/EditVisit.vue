@@ -18,8 +18,14 @@
 
       <!-- VISITS -->
       <div class="col">
-        <div class="row q-mt-lg">
-          <div class="col-12 bg-grey-3"><q-icon v-if="isProtected" name="lock" /> Aktive Visite <span class="text-caption">(erzeugt: {{queryresult_visits.created_time}})</span></div>
+        <q-toolbar class="bg-grey-9 text-white shadow-2 my-list-item">
+          <q-icon v-if="isProtected" name="lock" />
+          <q-btn round flat @click="loadVisit()" icon="refresh"/>
+          <q-toolbar-title>Aktive Visite <span class="text-caption">(erzeugt: {{queryresult_visits.created_time}})</span></q-toolbar-title>
+          <q-btn v-if="show_visit_data" flat icon="minimize" @click="show_visit_data=!show_visit_data"/>
+          <q-btn v-else flat icon="maximize" @click="show_visit_data=!show_visit_data"/>
+        </q-toolbar>
+        <div class="row q-mt-lg" v-show="show_visit_data">
             <div class="col-1 q-pa-xs"><q-input disable type="number" dense hint="VisitID" v-model.number=queryresult_visits.id /></div>
             <div class="col-8 q-pa-xs"><q-input :disable=isProtected dense hint="Label/Name" v-model=queryresult_visits.label @blur="data_changed=true" /></div>
             <div class="col-3 q-pa-xs"><q-select :disable=isProtected  v-model="queryresult_visits.study_ref_id" :options="options_study_ref" dense hint="zugeordnete Studie" @blur="data_changed=true" /></div> 
@@ -31,19 +37,21 @@
         </div>
 
         <!-- HOVER BUTTON -->
-          <q-page-sticky position="bottom-right" :offset="[18, 18]">
-            <q-btn v-if="data_changed" :disable=isProtected  fab color="primary" icon="save" @click="saveVisit()"/>
+          <q-page-sticky position="bottom-right" :offset="[18, 18]" class="z-max">
+            <q-btn v-if="data_changed || data_changed_quest" :disable=isProtected  fab color="primary" icon="save" @click="saveVisit()"/>
           </q-page-sticky>
 
       </div>
 
-      Untersuchungen & Quests     
+      <!-- QUEST_LIST -->
+      <div class="col q-mt-md">
+        <QUEST_LIST :visit_id="visit_id" :isprotected="queryresult_visits.protected"
+          :quest_list_must_save="quest_list_must_save"
+          @change="data_changed_quest = true"
+          @saved="quest_list_must_save = false; data_changed_quest = false"
+        />
+      </div>
 
-      <q-btn @click="loadQuests()">LOAD QUESTS</q-btn> 
-      <q-btn @click="newQuest()">ADD QUESTS</q-btn> 
-      
-      Quest-list{{quest_list}}
-      Quests: {{quests}}
     </div>
     
   </q-page>
@@ -51,7 +59,7 @@
 
 <script>
 import myMixins from 'src/mixins/modes'
-import {get_date_from_timeStamp} from 'src/classes/sqltools.js'
+import QUEST_LIST from 'src/components/QuestList'
 
 export default {
   name: 'EditVisit',
@@ -65,19 +73,18 @@ export default {
       datenow: Date.now(),
       visit_id: undefined,
       data_changed: false,
-      quest_list: undefined,
-      quests: []
+      data_changed_quest: false,
+      quest_list_must_save: false,
+      show_visit_data: true
     }
   },
 
-  components: { },
+  components: { QUEST_LIST },
   mixins: [myMixins], //imports: searchPatient & deleteItem
 
   mounted() {
     this.visit_id = this.$route.params.id
     this.loadVisit()
-    this.loadRefs({table: 'study_ref', select: 'label, description, id', update_ref: true, tag_options: 'options_study_ref', tag_results: 'queryresult_visits', tag_id_ref: 'study_ref_id'})
-    this.loadRefs({table: 'users', select: 'label, id', update_ref: true, tag_options: 'options_user', tag_results: 'queryresult_visits', tag_id_ref: 'user_id'})
   },
 
   computed: {
@@ -100,14 +107,26 @@ export default {
           this.$q.notify(this.$store.getters.ENV.text.alerts.visits_loaded)
         })
       })
+
+      // UPDATE Untersucher und StudyRef
+      this.loadRefs({table: 'study_ref', select: 'label, description, id', update_ref: true, tag_options: 'options_study_ref', tag_results: 'queryresult_visits', tag_id_ref: 'study_ref_id'})
+      this.loadRefs({table: 'users', select: 'label, id', update_ref: true, tag_options: 'options_user', tag_results: 'queryresult_visits', tag_id_ref: 'user_id'})
     },
 
-    saveVisit() {
-      const values = JSON.parse(JSON.stringify(this.queryresult_visits))
-      if (values.study_ref_id) values.study_ref_id = values.study_ref_id.id
-      if (values.user_id) values.user_id = values.user_id.id
-      this.saveEntry({table: 'visits', id: this.visit_id, values: values})
-      this.data_changed = false
+    saveVisit() {     
+      if (this.data_changed){ //does the visit need saving?
+        const values = JSON.parse(JSON.stringify(this.queryresult_visits))
+        if (values.study_ref_id) values.study_ref_id = values.study_ref_id.id
+        if (values.user_id) values.user_id = values.user_id.id
+        this.saveEntry({table: 'visits', id: this.visit_id, values: values})
+        this.data_changed = false
+      }
+
+      if (this.data_changed_quest) {//send a signal to the QUEST_LIST
+        this.quest_list_must_save = true
+        this.data_changed_quest = false
+      } 
+
     },
 
     goBack() {
@@ -121,36 +140,6 @@ export default {
           cancel: true,
           default: 'cancel'   // <<<<
       }).onOk(() => this.$router.go(-1))
-    },
-
-    loadQuests() { //query 1: list of all quests and then 2: query all lists
-      const visit_id = this.visit_id
-      //first get a list of all quests
-      this.$store.dispatch('queryDB', 'SELECT id, label FROM list_quests')
-      .then(res => {
-        this.quest_list = res
-        const promises = []
-        const list_label = []
-        res.forEach(r => {
-          let sqlquery = `SELECT * FROM ${r.label} WHERE visit_id=${visit_id}`
-          list_label.push(r.label)
-          promises.push(this.$store.dispatch('runQueryDB', sqlquery))
-        })
-        //collect promises of all queries, PROMISES MUSST finish in correct ORDER!
-        let i = -1
-        this.quests = []
-        Promise.all(promises).then(val => {
-          i++
-          if (val.length > 0) this.quests.push({label: list_label[i], value: val})
-        }).then(res => {
-          this.$q.notify(`${this.quests.length} Item(s) gefunden.`)
-        })
-
-      })
-    },
-
-    newQuest() {
-      this.$q.notify('comming soon')
     }
 
   }

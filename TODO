@@ -1,7 +1,7 @@
-- Tableverwalten / erstellen
+X Tableverwalten / erstellen
     - coding table >>> definition der anderen Tables ermöglichen
 
-- Patientenverwaltung
+X Patientenverwaltung
 
 - Visite planen
     - Patienten zuordnen
@@ -11,7 +11,6 @@
 - Study Sicht
     - in einer Studie nach Visiten / Patienten suchen
 
-- Nutzerverwaltung
 
 - Summaries erstellen
     - Alle Visiten eines Patienten

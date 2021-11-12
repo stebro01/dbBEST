@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_05f53is" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="Process_1h99wjq" isExecutable="true">
+    <bpmn:task id="Activity_1wnd9wo" name="SQL Template: quest_TEMPLATE verwenden">
+      <bpmn:incoming>Flow_0b37jm1</bpmn:incoming>
+      <bpmn:outgoing>Flow_01uggo0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1ntlen5" name="quest_NEU bearbeiten und anpassen">
+      <bpmn:incoming>Flow_01uggo0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xa9zv7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_01uggo0" sourceRef="Activity_1wnd9wo" targetRef="Activity_1ntlen5" />
+    <bpmn:task id="Activity_1vjyrwp" name="neuen Eintrag in list_quests vornehmen">
+      <bpmn:incoming>Flow_1xa9zv7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lxz0ml</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1xa9zv7" sourceRef="Activity_1ntlen5" targetRef="Activity_1vjyrwp" />
+    <bpmn:startEvent id="Event_1m97dpl" name="neuen Fragebogentyp der DB hinzufügen">
+      <bpmn:outgoing>Flow_0b37jm1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0b37jm1" sourceRef="Event_1m97dpl" targetRef="Activity_1wnd9wo" />
+    <bpmn:endEvent id="Event_1cxzbg8" name="Fragebogentyp ist hinzugefügt">
+      <bpmn:incoming>Flow_1lxz0ml</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1lxz0ml" sourceRef="Activity_1vjyrwp" targetRef="Event_1cxzbg8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1h99wjq">
+      <bpmndi:BPMNEdge id="Flow_01uggo0_di" bpmnElement="Flow_01uggo0">
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="420" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xa9zv7_di" bpmnElement="Flow_1xa9zv7">
+        <di:waypoint x="520" y="120" />
+        <di:waypoint x="570" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b37jm1_di" bpmnElement="Flow_0b37jm1">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="270" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lxz0ml_di" bpmnElement="Flow_1lxz0ml">
+        <di:waypoint x="670" y="120" />
+        <di:waypoint x="722" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1wnd9wo_di" bpmnElement="Activity_1wnd9wo">
+        <dc:Bounds x="270" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ntlen5_di" bpmnElement="Activity_1ntlen5">
+        <dc:Bounds x="420" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vjyrwp_di" bpmnElement="Activity_1vjyrwp">
+        <dc:Bounds x="570" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m97dpl_di" bpmnElement="Event_1m97dpl">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="145" width="74" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cxzbg8_di" bpmnElement="Event_1cxzbg8">
+        <dc:Bounds x="722" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="696" y="145" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

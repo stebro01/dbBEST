@@ -31,7 +31,7 @@
       </div>
 
       <div class="col q-mt-lg">
-        <q-btn color="primary" @click="newVisit()">Eine neue Visite anlegen und durchführen</q-btn>
+        <q-btn no-caps color="primary" @click="newVisit()">Eine neue Visite anlegen und durchführen</q-btn>
 
       </div>
       

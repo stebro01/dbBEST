@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="colum text-center">
       <div class="col">
-        Tables verwalten
+        Fragebögen verwalten
 
       </div>
 
@@ -12,20 +12,21 @@
           @deleteItem="deleteItem($event)"
           @editItem="editItem($event)"
           @addItem="addItem()"
-          :data="queryresult" :datenow="datenow" :title="'Tables'"
+          :mode="'list_quests'"
+          :data="queryresult" :datenow="datenow" :title="'quests_*'"
           :show_hidden="show_hiden"
         />
         
       </div>
       <div class="col text-right q-mt-xl text-grey-7">
-        <q-toggle v-model="show_hiden" label="zeige versteckte an" @click="toggle_show_hidden" />
+        <q-toggle v-model="show_hiden" label="zeige geschützte an" @click="toggle_show_hidden" />
       </div>
     </div>
 
     <!-- THE MODAL TO EDIT ENTRIES -->
     <EDIT_ENTRY 
       :active="edit_is_active"
-      :edit_content="edit_content" :table="table"
+      :edit_content="edit_content"
       @close="closeEdit()"
       @save="saveEdit($event)"
     />
@@ -50,7 +51,7 @@ export default {
     return {
       queryresult: undefined,
       datenow: Date.now(),
-      table: 'coding',
+      table: 'list_quests',
       edit_is_active: false,
       edit_content: undefined,
       show_hiden: this.$store.getters.SETTINGS.show_hidden

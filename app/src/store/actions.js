@@ -164,6 +164,7 @@ export function deleteDBEntry({}, payload) {
  * @returns Promise > resolve (if success), and reject (else)
  */
 export function runUpdateDB({}, payload) {
-    console.log('action -> runUpdateDB: ', payload)
+    if (payload.length <200 ) console.log('action -> runUpdateDB: ', payload)
+    else console.log('action -> runUpdateDB: ', payload.substring(0, 200))
     return window.electron.dbman.run(payload)
 }

@@ -6,8 +6,6 @@
 
       <div class="col q-gutter-xl">
         <q-btn color="primary" no-caps @click="$router.push({name: 'Patients'})">Patienten suchen und eine Viste planen</q-btn>
-        <q-btn color="primary" no-caps @click="commingSoon()">Studienansicht - Innerhalb einer Studie nach Patienten suchen</q-btn>
-        <q-btn color="primary" no-caps @click="commingSoon()">Summaries / Zusammenfassung erstellen</q-btn>
       </div>
       
     </div>

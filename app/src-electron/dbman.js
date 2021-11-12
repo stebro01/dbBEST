@@ -55,7 +55,8 @@ const get_all = async (sql_query) => {
 }
   
 const run = async (sql_query) => {
-    console.log('dbman -> run: '+sql_query)
+    if (sql_query.length < 200) console.log('dbman -> run: '+sql_query)
+    else console.log('dbman -> run: '+sql_query.substring(1, 200))
     return new Promise((resolve, reject) => {
         database.run(sql_query, function(err) {
         if (err) {

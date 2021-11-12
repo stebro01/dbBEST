@@ -7,6 +7,7 @@ export default function () {
     return {
       ENV,
       SETTINGS,
-      connected: false
+      connected: false,
+      QUESTS_PRESETS: undefined
     }
   }

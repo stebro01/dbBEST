@@ -15,3 +15,7 @@ export function SETTINGS_CLEAR (state) {
 export function CONNECTED_SET (state, payload) {
     state.connected = payload
 }
+
+export function QUESTS_PRESETS_SET (state, payload) {
+    state.QUESTS_PRESETS = payload
+}

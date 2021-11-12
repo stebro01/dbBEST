@@ -11,7 +11,7 @@
     <q-list v-if="data && shrink" bordered>
     <!-- START Q_ITEM -->
      <div v-for="(item, ind) in data" :key="ind + datenow">
-      <q-item v-if="item.hide !== 1 || show_hidden" class="q-my-sm my-list-item">
+      <q-item v-if="item.protected !== 1 || show_hidden" class="q-my-sm my-list-item">
        
         <!-- FIRST COLUMN -->
         <q-item-section v-if="mode === 'visits'" avatar>
@@ -25,14 +25,10 @@
 
         <!-- SECOND COLUMN -->
         <!-- Case: TABLE -->
-        <q-item-section v-if="item.table">
-          <q-item-label>{{ item.table }}</q-item-label>
+        <q-item-section v-if="mode==='list_quests'">
+          <q-item-label>{{ item.label }}</q-item-label>
+          <q-item-label caption>{{ item.description }}</q-item-label>
           <q-item-label caption lines="1">system: {{ item.system }}</q-item-label>
-          <q-item-label caption lines="1">coding:
-            <span v-for="(cc,indc) in JSON.parse(item.coding)" :key="indc+'coding'">
-              {{cc.label}}({{cc.type}}),
-            </span>
-          </q-item-label>
         </q-item-section>
         <!-- Case: PATIENTS MODE -->
         <q-item-section v-else-if="mode === 'patients'">
@@ -49,7 +45,6 @@
           </q-item-label>
           <q-item-label caption>
             {{item.description}}
-            <span v-if="item.study_ref_id">, <q-badge>StudyRef: {{item.study_ref_id}}</q-badge></span>
           </q-item-label>
         </q-item-section>
         <!-- else -->
@@ -71,7 +66,7 @@
               
             </span>
             <span v-if="mode==='patients'">
-              <q-btn round size="sm" @click="this.$emit('openItemVisits', {id: item.id, index: ind})" flat icon="tour"><q-tooltip>Öffne Visiten des Patienten</q-tooltip> </q-btn>
+              <q-btn round size="sm" @click="this.$emit('openItemVisits', {id: item.id, index: ind})" flat color="primary" icon="tour"><q-tooltip>Öffne Visiten des Patienten</q-tooltip> </q-btn>
             </span>
           </div>
           <span v-if="show_lock">
@@ -103,8 +98,8 @@ export default {
 
     computed: {
         shrink_icon() {
-            if (this.shrink) return 'close_fullscreen'
-            return 'fullscreen'
+            if (this.shrink) return 'minimize'
+            return 'maximize'
         }
     },
 

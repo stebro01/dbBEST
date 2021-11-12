@@ -1,7 +1,7 @@
 <template>
   <div class="">
       coding
-      <q-btn round icon="add" @click="addEntry"/>
+      <q-btn :disable="PROTECTED" round icon="add" @click="addEntry"/>
       <q-btn @click="exportCoding" flat no-caps>Export</q-btn>
       <q-list v-if="local_data">
           <q-item v-for="(item, ind) in local_data" :key="ind + 'coding'">
@@ -27,7 +27,7 @@
 <script>
 export default {
     name: 'EditCoding',
-    props: ['coding'],
+    props: ['coding', 'PROTECTED'],
 
     data() {
         return {

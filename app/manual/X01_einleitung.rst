@@ -16,7 +16,7 @@ Die folgende Abbildung fasst das kurz zusammen.
 
    Grundprinzip dieser App
 
-Die Daten selber werden in einer SQLITE DB gespeichert. Der Prinzipielle Aufbau der SQL Tables ist in der folgenden Abbildung dargestellt.
+Die Daten selber werden in einer SQLITE DB gespeichert. Der prinzipielle Aufbau der SQL Tables ist in der folgenden Abbildung dargestellt.
 
 .. figure:: _images/abbildung01_bpmn_tables.png
    :height: 400 px

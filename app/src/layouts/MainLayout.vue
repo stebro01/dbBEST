@@ -44,7 +44,7 @@
 
     <!-- INFO BADGE -->
     <q-badge v-if="this.$store.getters.SETTINGS" 
-      class="z-top absolute-top-right q-mt-xl  text-grey-8" 
+      class="absolute-top-right q-mt-xl  text-grey-8" style="z-index: 10"
       :class="{'bg-green-4': $store.getters.CONNECTED, 'bg-grey-3': !$store.getters.CONNECTED}"
       @click="connectDB()"
       >
@@ -81,8 +81,8 @@ const linksList = [
     link: 'Patients'
   },
   {
-    title: 'Tables verwalten',
-    caption: 'verwaltet den Table `coding` in der SQLITE DB',
+    title: 'Fragebögen verwalten',
+    caption: 'verwaltet den Table `list_quests` in der SQLITE DB',
     icon: 'toc',
     link: 'Tables'
   },

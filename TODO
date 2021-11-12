@@ -3,14 +3,16 @@ X Tableverwalten / erstellen
 
 X Patientenverwaltung
 
-- Visite planen
-    - Patienten zuordnen
-    - Studie zuoordnen
-    - quests zuoordnen
+X Visite planen
+    X Patienten zuordnen
+    X Studie zuoordnen
+    X quests zuoordnen
+
+- RenderQuest.vue mit Möglichkeit der Verwendung unterschiedlicher Datentypen
+    - sollten im Coding Feld von Table list_quests hinterlegt sein
 
 - Study Sicht
     - in einer Studie nach Visiten / Patienten suchen
-
 
 - Summaries erstellen
     - Alle Visiten eines Patienten

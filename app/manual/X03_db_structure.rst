@@ -81,9 +81,9 @@ Alle Fragebögen sind mit dem Standardtemplate *quest_TEMPLATE* erstellt.
       "first_name"	TEXT,
       "birthdate"	TEXT,
       "gender"	TEXT,
-      "protected"	INTEGER COLLATE BINARY,
+      "protected"	INTEGER DEFAULT 0 COLLATE BINARY,
       "created_time"	INTEGER DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY("id" AUTOINCREMENT)
+      PRIMARY KEY("id")
    );
 
 .. figure:: _images/abbildung04_04_patients.png

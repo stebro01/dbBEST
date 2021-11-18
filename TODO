@@ -8,8 +8,10 @@ X Visite planen
     X Studie zuoordnen
     X quests zuoordnen
 
-- RenderQuest.vue mit Möglichkeit der Verwendung unterschiedlicher Datentypen
-    - sollten im Coding Feld von Table list_quests hinterlegt sein
+X RenderQuest.vue mit Möglichkeit der Verwendung unterschiedlicher Datentypen
+    X sollten im Coding Feld von Table list_quests hinterlegt sein
+
+X Löschen einer VIsite auch mit Löschen zugehöriger quests!
 
 - Study Sicht
     - in einer Studie nach Visiten / Patienten suchen

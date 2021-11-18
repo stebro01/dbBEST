@@ -12,7 +12,7 @@
       <div class="col">
         <TABLE_LIST 
           @refresh="queryDB(table_list_quests, 'queryresult')" 
-          @deleteItem="deleteItem($event)"
+          @deleteItem="deleteItem($event, table_list_quests)"
           @editItem="editItem($event)"
           @addItem="addItem(table_list_quests)"
           :mode="'list_quests'"
@@ -109,24 +109,47 @@ export default {
       .catch(err => this.$q.notify(err)) 
     },
 
-    deleteItem(payload) {
+    deleteItem(payload, table) {
       this.$q.dialog({
           title: 'Wirklich Löschen?',
-          message: `Wollen Sie den Eintrag mit der ID ${payload.id} wirklich löschen?`,
+          message: `Wollen Sie den Eintrag mit der ID ${payload.id} wirklich löschen? (Damit werden evtl. alle Daten des Tables gelöscht!!!)`,
           color: 'negative',
           ok: `Ja`,
           cancel: true,
           default: 'cancel'   // <<<<
         }).onOk(() => {
-          // first the action and then update data array
-          this.$store.dispatch('deleteDBEntry', {table: this.table, id: payload.id})
-          .then(res => {
-            this.$q.notify(res)
-            this.queryDB()
-            }) 
-          .catch(err => this.$q.notify(err)) 
+          // determine the quest to delete
+          const quest = this.queryresult[payload.index]
+          // check if the table exisitws
+          let sqlquery = `SELECT name FROM sqlite_master WHERE type='table' AND name='${quest.label}';`
+          this.$store.dispatch('runQueryDB',sqlquery).then(res => {
+            if (res.length === 0) return this.deleteItemByID(table, payload.id, 'queryresult')
+            else {
+              // check if the table is empty or not
+              this.$store.dispatch('runQueryDB',`SELECT * FROM ${quest.label}`).then(res => {
+                if (res.length === 0) {
+                  this.$store.dispatch('runUpdateDB', `DROP TABLE ${quest.label}`)
+                  .then(() => {return this.deleteItemByID(table, payload.id, 'queryresult')})
+                }//do something
+                else return this.$q.notify(`TABLE ${quest.label} kann nicht gelöscht werden, da er nicht leer ist.`)
+              })
+            }
+          })
+          
+
         } )
     },
+
+    deleteItemByID(table, id, fieldtoupdate) {
+      // first the action and then update data array
+      this.$store.dispatch('deleteDBEntry', {table: table, id: id})
+      .then(res => {
+        this.$q.notify(res)
+        this.queryDB(table, fieldtoupdate)
+        }) 
+      .catch(err => this.$q.notify(err)) 
+    },
+
 
     editItem(payload) {
       this.edit_is_active = true
@@ -146,6 +169,44 @@ export default {
         }) 
       .catch(err => this.$q.notify(err)) 
       this.closeEdit()
+
+      // check if the table exists
+      let sqlquery = `SELECT name FROM sqlite_master WHERE type='table' AND name='${payload.label}';`
+      this.$store.dispatch('runQueryDB',sqlquery).then(res => {
+        if (res.length === 0) {
+          //table exisitiert nicht, versuche ihn zu erzeugen
+          this.addTable(payload)
+        } else {
+          this.$store.dispatch('runQueryDB',`SELECT * FROM ${payload.label}`).then(res => {
+            if (res.length > 0) return this.$q.notify('Table ist nicht leer und kann somit nicht automatisch geupdatet werden')
+            else {
+              this.$store.dispatch('runUpdateDB', `DROP TABLE ${payload.label}`).then(() =>this.addTable(payload))
+              
+            }
+          })
+        }
+      })
+    },
+
+    addTable(payload) {
+      let fields = ''
+      JSON.parse(payload.coding).forEach(c => {
+        switch (c.type) {
+          case 'string':
+          case 'date':
+            fields += ` "${c.tag}" TEXT,`
+            break
+          case 'number':
+          case 'boolean':
+            fields += ` "${c.tag}" INTEGER,`
+            break
+          default: 
+            break
+        }
+      })
+      let table_def = `"id"	INTEGER UNIQUE, "visit_id"	INTEGER,${fields} "protected" INTEGER DEFAULT 0 COLLATE BINARY, "created_time"	TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY("id" AUTOINCREMENT)`
+      let sqlquery = `CREATE TABLE ${payload.label} (${table_def})`
+      this.$store.dispatch('runUpdateDB', sqlquery).then(() => this.$q.notify('Update erfolgreich'))
     },
 
     setProtected(payload, table) {

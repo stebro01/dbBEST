@@ -47,6 +47,23 @@
             {{item.description}}
           </q-item-label>
         </q-item-section>
+
+        <!-- Case: VISITS MODE -->
+        <q-item-section v-else-if="mode === 'definitions'">
+          <q-item-label>
+            <div class="row">
+              <q-input class="col-3" disable dense hint="tag" v-model=item.tag />
+              <q-input class="col-3 q-pl-xs" disable dense hint="label" v-model=item.label />
+              <q-input class="col-2 q-pl-xs" disable dense hint="type" v-model=item.type />
+              <q-input class="col-2 q-pl-xs" disable dense hint="system" v-model=item.system />
+              <q-input class="col-2 q-pl-xs" disable dense hint="code" v-model=item.code />
+
+            </div>
+            
+            
+          </q-item-label>
+   
+        </q-item-section>
         <!-- else -->
         <q-item-section v-else>
           <q-item-label caption>{{ item }}</q-item-label>
@@ -71,7 +88,7 @@
           </div>
           <span v-if="show_lock">
             <q-btn v-if="!item.protected" flat round size="sm" icon="lock_open" @click="this.$emit('setProtected', {ind: ind, id: item.id, protected: true})"/>
-            <q-btn v-else flat round size="xs" icon="lock" @click="this.$emit('setProtected', {ind: ind, id: item.id, protected: false})"/>
+            <q-btn v-else flat disable round size="xs" icon="lock" @click="this.$emit('setProtected', {ind: ind, id: item.id, protected: false})"/>
           </span>
           
         </q-item-section>

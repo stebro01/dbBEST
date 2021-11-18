@@ -46,7 +46,7 @@ export default {
             return new Promise((resolve, reject) => {
                 this.$q.dialog({
                     title: 'Wirklich Löschen?',
-                    message: `Wollen Sie den Eintrag mit der ID ${payload.id} wirklich löschen?`,
+                    message: `Wollen Sie den Eintrag mit der ID ${payload.id} wirklich löschen? Auch damit verbundene Einträge (Childs) werden gelöscht!`,
                     color: 'negative',
                     ok: `Ja`,
                     cancel: true,

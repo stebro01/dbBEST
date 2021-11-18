@@ -76,9 +76,21 @@ export function queryDB ({}, payload) {
  * @example this.$store.dispatch('deleteDBEntry', {table: this.table, id: payload.id})
  * @returns Promise > resolve (if success), and reject (else)
  */
-export function deleteDBEntry({}, payload) {
+export async function deleteDBEntry({}, payload) {
     console.log('action -> queryDB: ', payload)
     const sqlquery = `DELETE FROM ${payload.table} WHERE id = ${payload.id}`
+
+    if (payload.table === 'visits') {
+        console.log('clear quests as well ... ')
+        const sqlquest2 = 'SELECT id, label, description FROM list_quests'
+        queryDB({}, sqlquest2).then(quests => {
+            quests.forEach(q => {
+                let sqlrmquest = `DELETE FROM ${q.label} WHERE visit_id = ${payload.id}`
+                window.electron.dbman.run(sqlrmquest)
+            })
+        })
+    }
+
     return window.electron.dbman.run(sqlquery)
 }
 

@@ -2,24 +2,38 @@
   <q-page class="flex flex-center">
     <div class="colum text-center">
       <div class="col">
-        Fragebögen verwalten
+        <div class="text-h6">Fragebögen & Definitionen verwalten</div>
+          <div class="text-right">
+         <q-toggle v-model="show_hiden" label="zeige geschützte an" @click="toggle_show_hidden" />
+        </div>
 
       </div>
 
       <div class="col">
         <TABLE_LIST 
-          @refresh="queryDB()" 
+          @refresh="queryDB(table_list_quests, 'queryresult')" 
           @deleteItem="deleteItem($event)"
           @editItem="editItem($event)"
-          @addItem="addItem()"
+          @addItem="addItem(table_list_quests)"
           :mode="'list_quests'"
           :data="queryresult" :datenow="datenow" :title="'quests_*'"
           :show_hidden="show_hiden"
         />
         
       </div>
-      <div class="col text-right q-mt-xl text-grey-7">
-        <q-toggle v-model="show_hiden" label="zeige geschützte an" @click="toggle_show_hidden" />
+      <div class="col q-mt-xl">
+          <TABLE_LIST 
+          @refresh="queryDB(table_def, 'query_definitions')" 
+          :data="query_definitions" 
+          :datenow="datenow" :title="'Definitions'"
+          :mode="'definitions'"
+          :show_lock="true"
+          :show_hidden="show_hiden"
+          :view_only="true"
+          :no_add="true"
+          @setProtected="setProtected($event, table_def)"
+        />
+       
       </div>
     </div>
 
@@ -27,8 +41,9 @@
     <EDIT_ENTRY 
       :active="edit_is_active"
       :edit_content="edit_content"
+      :definitions="query_definitions"
       @close="closeEdit()"
-      @save="saveEdit($event)"
+      @save="saveEdit($event, table_list_quests)"
     />
     
   </q-page>
@@ -50,8 +65,10 @@ export default {
   data() {
     return {
       queryresult: undefined,
+      query_definitions: undefined,
       datenow: Date.now(),
-      table: 'list_quests',
+      table_list_quests: 'list_quests',
+      table_def: 'definitions',
       edit_is_active: false,
       edit_content: undefined,
       show_hiden: this.$store.getters.SETTINGS.show_hidden
@@ -67,14 +84,15 @@ export default {
   },
 
   mounted() {
-    this.queryDB()
+    this.queryDB(this.table_list_quests, 'queryresult')
+    this.queryDB(this.table_def, 'query_definitions')
   },
 
   methods: {
-    queryDB() {
-      this.$store.dispatch('queryDB', `SELECT * FROM ${this.table}`)
+    queryDB(table, fieldstr) {
+      this.$store.dispatch('queryDB', `SELECT * FROM ${table}`)
       .then(res => {
-        this.queryresult = res
+        this[fieldstr] = res
         }) 
       .catch(err => {
         console.error(err)
@@ -82,11 +100,11 @@ export default {
       }) 
     },
 
-    addItem() {
-      this.$store.dispatch('addDBEntry', {table: this.table})
+    addItem(table) {
+      this.$store.dispatch('addDBEntry', {table: table})
       .then(res => {
         this.$q.notify(res)
-        this.queryDB()
+        this.queryDB(table, 'queryresult')
         }) 
       .catch(err => this.$q.notify(err)) 
     },
@@ -120,14 +138,22 @@ export default {
       this.edit_content = undefined
     },
 
-    saveEdit(payload) {
-      this.$store.dispatch('updateDBEntry', {table: this.table, values: payload, id: payload.id})
+    saveEdit(payload, table) {
+      this.$store.dispatch('updateDBEntry', {table: table, values: payload, id: payload.id})
       .then(res => {
         this.$q.notify(res)
-        this.queryDB()
+        this.queryDB(table,'queryresult')
         }) 
       .catch(err => this.$q.notify(err)) 
       this.closeEdit()
+    },
+
+    setProtected(payload, table) {
+      this.$store.dispatch('updateDBEntry', {table: table, values: {protected: 1}, id: payload.id})
+      .then(res => {
+        this.$q.notify(res)
+        this.queryDB(table, 'query_definitions')
+      }) 
     },
 
     toggle_show_hidden() {

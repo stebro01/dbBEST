@@ -109,7 +109,7 @@ export default {
                 cda_content: cda_txt,
                 summary_html: body_html,
                 visit_id: this.visit_id,
-                table: 'quest_surveyBEST',
+                table: 'quest_surveyBEST'
             }
             const sqlquery = `INSERT into ${p.table}(visit_id, pid, label, title, sum_score, date, summary_html, cda_content) VALUES (${p.visit_id}, '${p.pid}', '${p.label}', '${p.title}', ${p.sum_score}, ${p.date}, '${p.summary_html}', '${p.cda_content}')`
             this.$store.dispatch('runUpdateDB', sqlquery)

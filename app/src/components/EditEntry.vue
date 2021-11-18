@@ -1,24 +1,31 @@
 <template>
     <q-dialog v-model="prompt" persistent>
       <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6"><q-icon v-if="PROTECTED" name="lock"/>Eintrag ändern</div>
-          
-          <div class="text-caption" v-if="local_data">ID: {{local_data.id}}</div>
-          
+        <q-card-section class="row items-center q-pb-none" >
+          <div class="text-h6"><q-icon v-if="PROTECTED" name="lock"/>Eintrag ändern <span class="text-caption">(ID: {{local_data.id}})</span></div>
+
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+                  
         </q-card-section>
+
 
         <!-- RENDER ENTRIES -->
         <q-card-section class="q-pt-none">
             <div v-for="(item, ind) in FIELDS" :key="ind+item">
                 
                 <span v-if="item === 'coding'">
-                    <EDIT_CODING  :PROTECTED="PROTECTED" :coding="local_data[item]" @updateEntry="updateCodingEntry(item, $event)"/>
+                    <EDIT_CODING  :definitions="definitions" :PROTECTED="PROTECTED" :coding="local_data[item]" @updateEntry="updateCodingEntry(item, $event)"/>
                 </span>
                 <span v-else-if="item !== 'id'">
-                    <q-input dense :label="item" v-model="local_data[item]" 
+
+                    <q-input v-if="item !== 'protected'" dense :label="item" v-model="local_data[item]" 
                         :disable="PROTECTED" 
                     />
+                    <div v-else>
+                        <q-btn flat v-if="PROTECTED" disable icon="lock"></q-btn>
+                        <q-btn flat v-else icon="lock_open" @click="local_data[item] = 1"></q-btn>
+                    </div>
                     
                 </span>
             </div>
@@ -41,7 +48,7 @@ import EDIT_CODING from 'src/components/EditCoding.vue'
 
 export default {
     name: 'EditEntry',
-    props: ['active', 'edit_content'],
+    props: ['active', 'edit_content', 'definitions'],
 
     components: { EDIT_CODING },
 

@@ -3,7 +3,8 @@
     <q-toolbar class="bg-grey-9 text-white shadow-2 my-list-item">
       <q-btn round flat @click="loadQuests()" icon="refresh"/>
       <q-toolbar-title>Untersuchungen (quests)</q-toolbar-title>
-      <q-btn v-if="quest_list && !isprotected" color="primary" @click="show_dialog=true" icon="add"><q-tooltip>Fragebögen / Quests hinzufügen</q-tooltip></q-btn> 
+
+      <q-btn v-if="quest_list && !isprotected" :disable="data_changed_quest" color="primary" @click="show_dialog=true" icon="add"><q-tooltip>Fragebögen / Quests hinzufügen</q-tooltip></q-btn> 
     </q-toolbar>
 
     <q-list bordered separator class="my-list-item">
@@ -28,7 +29,7 @@
         <!-- END ITEM -->
         </q-item>
         <div v-if="expand[ind]">
-          <RENDER_QUEST :quest="item.value" :disable="item.value.protected===1" @change="questModified(ind)"/>
+          <RENDER_QUEST :label="item.label" :quest="item.value" :disable="item.value.protected===1" @change="questModified(ind)"/>
         </div>
         <q-separator />
       </div>
@@ -57,7 +58,7 @@ import RENDER_QUEST from 'src/components/RenderQuest.vue'
 export default {
     name: 'QUEST_LIST',
 
-    props: ['visit_id', 'isprotected', 'quest_list_must_save'],
+    props: ['visit_id', 'isprotected', 'quest_list_must_save', 'data_changed_quest'],
 
     components: { SELECT_QUEST, RENDER_QUEST, SURVEY_BEST },
 
@@ -161,6 +162,7 @@ export default {
         this.$store.dispatch('runUpdateDB', sqlquery)
         .then(res => {
           this.$q.notify(res)
+          this.loadQuests()
         }).catch(err => this.$q.notify(err))
       })
 
@@ -196,6 +198,15 @@ export default {
         id: item.value.id,
         values: item.value
       }
+
+      //BOOLEAN wird von sqlite nicht so unterstützt, transformiere in 1 / 0
+      Object.keys(payload.values).forEach(key => {
+        if(typeof(payload.values[key]) === 'boolean') {
+          if (payload.values[key]) payload.values[key] = 1
+          else payload.values[key] = 0
+        }
+      })
+
       this.$store.dispatch('updateDBEntry', payload)
       .then(res=>{
         this.$q.notify(res)

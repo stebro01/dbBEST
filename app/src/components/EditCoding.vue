@@ -1,24 +1,79 @@
 <template>
   <div class="">
-      coding
+      coding: 
       <q-btn :disable="PROTECTED" round icon="add" @click="addEntry"/>
       <q-btn @click="exportCoding" flat no-caps>Export</q-btn>
       <q-list v-if="local_data">
           <q-item v-for="(item, ind) in local_data" :key="ind + 'coding'">
               <div class="row">
-                  <div class="col-2"><q-input dense v-model="item.label" label="label" @blur="updateEntry()" /></div>
-                  <div class="col-2">
-                      <q-select dense v-model="item.type" :options="type_types" label="type" @blur="updateEntry()" />
+                    <div class="col-11">
+                        <div class="row">
+                            <q-input class="col-2" :disable="item.definition_id !== null" dense v-model="item.tag" hint="tag" @blur="updateEntry()" />
+                            <q-input class="col-3 q-pl-xs" :disable="item.definition_id !== null" dense v-model="item.label" hint="label" @blur="updateEntry()" />
+                            <q-select  class="col-3 q-pl-xs" :disable="item.definition_id !== null" dense v-model="item.type" :options="type_types" hint="type" @blur="updateEntry()" />
+
+                            <!-- DEFINTIONS -->
+                            <div class=" q-pl-md col-4">
+                                <q-input readonly dense v-model.number="item.definition_id" hint="definition" @blur="updateEntry()">
+                                    <template v-slot:prepend>
+                                    <q-btn flat  icon="search" @click="active_entry = ind; prompt_def = true"/>
+                                    </template>
+                                    <template v-slot:append>
+                                    <q-icon name="close" @click="item.definition_id = null" class="cursor-pointer" />
+                                    </template>     
+                                </q-input>
+                            </div>
+
+                        </div>
                     </div>
-                  <div class="col-2">
-                      <q-select dense v-model="item.system" :options="system_types" label="system" @blur="updateEntry()" />
+
+                    <!-- DELETE BUTTON -->
+                    <div class="col-1">
+                        <q-btn flat icon="delete" @click="deleteEntry(ind)"/>
                     </div>
-                  <div class="col-3"><q-input dense v-model="item.code" label="code" @blur="updateEntry()" /></div>
-                  <div class="col-2"><q-input dense v-model="item.default" label="default" @blur="updateEntry()" /></div>
-                  <div class="col-1"><q-btn flat icon="delete" @click="deleteEntry(ind)"/></div>
               </div>
           </q-item>
       </q-list>
+
+      <!-- MODAL LIST DEFINITIONS -->
+      <q-dialog v-model="prompt_def" persistent>
+            <q-card style="min-width: 350px">
+
+                <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6"> <q-icon v-if="PROTECTED" name="lock"/> Definition hinzufügen</div>
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                    <q-list bordered >
+                        <q-item v-for="(def, inddef) in definitions" :key="inddef + datenow" 
+                            clickable v-ripple
+                            @click="selectDefinition(def)"
+                        >
+                            <q-item-section avatar>
+                                <q-item-label >{{def.label}}</q-item-label>
+                                <q-item-label caption>ID: {{def.id}}</q-item-label>
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>tag: {{def.tag}} / type: {{def.type}}</q-item-label>
+                                <q-item-label caption>{{def.system}}: {{def.code}}</q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                                <q-item-label v-if="def.range === 1">
+                                    range: {{def.range_min}} .. {{def.range_max}}
+                                </q-item-label>
+                                <q-item-label v-if="def.options === 1">
+                                    options: {{def.options_text}}
+                                </q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-card-section>
+
+
+            </q-card>
+      </q-dialog>
         
       
   </div>
@@ -27,13 +82,16 @@
 <script>
 export default {
     name: 'EditCoding',
-    props: ['coding', 'PROTECTED'],
+    props: ['coding', 'PROTECTED', 'definitions'],
 
     data() {
         return {
         local_data: [],
+        datenow: Date.now(),
         type_types: this.$store.getters.ENV.types_fields,
         system_types: this.$store.getters.ENV.types_system,
+        prompt_def: false,
+        active_entry: null
         }
     },
 
@@ -45,11 +103,10 @@ export default {
     methods: {
         addEntry() {
             const entry = {
+                tag: null,
                 label: null,
                 type: "number",
-                system: "snomed",
-                code: null,
-                default: null
+                definition_id: null
             }
             this.local_data.push(entry)
             this.$emit('updateEntry', JSON.stringify(this.local_data))
@@ -68,6 +125,26 @@ export default {
                 cancel: true,
                 persistent: true
             })
+        },
+        editRange(ind) {
+            if (this.edit_range[ind]) this.local_data[ind].range = [0, 1]
+            else this.local_data[ind].range = null;
+            return
+        },
+
+        selectDefinition(def) {
+            this.prompt_def = false
+            if (this.active_entry !== null) {
+                this.local_data[this.active_entry].tag = def.tag;
+                this.local_data[this.active_entry].label = def.label;
+                this.local_data[this.active_entry].type = def.type;
+                this.local_data[this.active_entry].definition_id = def.id;
+                this.updateEntry()
+            }
+
+
+            // fertig
+            this.active_entry = null;
         }
     }
 }

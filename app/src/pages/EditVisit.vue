@@ -47,6 +47,7 @@
       <div class="col q-mt-md">
         <QUEST_LIST :visit_id="visit_id" :isprotected="queryresult_visits.protected"
           :quest_list_must_save="quest_list_must_save"
+          :data_changed_quest="data_changed_quest"
           @change="data_changed_quest = true"
           @saved="quest_list_must_save = false; data_changed_quest = false"
         />

@@ -2,6 +2,8 @@
   <q-page class="flex flex-center">
     <div class="column text-center my-list-item">
 
+        <div class="col q-mb-xl text-h6">Patienten suchen oder neu erstellen</div>
+
         <div class="col">
            
             <div class="row">

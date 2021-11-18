@@ -2,6 +2,10 @@ export function SETTINGS_INIT (state) {
     state.SETTINGS.init()
 }
 
+/**
+ * 
+ * @example this.$store.commit('SETTINGS_SET', {label: 'user', value: this.active_user})
+ */
 export function SETTINGS_SET (state, payload) {
     if (!payload) return false
     state.SETTINGS.data = payload

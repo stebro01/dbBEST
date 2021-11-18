@@ -37,7 +37,7 @@
 
       <!-- MODAL LIST DEFINITIONS -->
       <q-dialog v-model="prompt_def" persistent>
-            <q-card style="min-width: 350px">
+            <q-card class="my-list-item">
 
                 <q-card-section class="row items-center q-pb-none">
                     <div class="text-h6"> <q-icon v-if="PROTECTED" name="lock"/> Definition hinzufügen</div>
@@ -46,8 +46,17 @@
                 </q-card-section>
 
                 <q-card-section>
+                    <div class="row">
+                        <div class="col-2">Filter: </div>
+                        <q-input class="col-3" dense type="number" v-model.number="filter.id" hint="id"/>
+                        <q-input class="col-4 q-pl-xs" dense v-model="filter.name" hint="name/tag"/>
+                        <q-btn class="col-3" dense flat rounded icon="close" @click="filter.id = null; filter.name = null" />
+                    </div>
+                </q-card-section>
+
+                <q-card-section>
                     <q-list bordered >
-                        <q-item v-for="(def, inddef) in definitions" :key="inddef + datenow" 
+                        <q-item v-for="(def, inddef) in DEFINITIONS" :key="inddef + datenow" 
                             clickable v-ripple
                             @click="selectDefinition(def)"
                         >
@@ -91,13 +100,42 @@ export default {
         type_types: this.$store.getters.ENV.types_fields,
         system_types: this.$store.getters.ENV.types_system,
         prompt_def: false,
-        active_entry: null
+        active_entry: null,
+        filter: {
+            id: null,
+            name: null
+        }
         }
     },
 
     mounted() {
         if (this.coding && this.coding !== '{}') this.local_data = JSON.parse(this.coding)
         else this.local_data = []
+    },
+
+    computed: {
+        DEFINITIONS() {
+            if (!this.definitions) return []
+            if (this.filter.id === null && this.filter.name === null) return this.definitions
+            if (this.filter.id) {
+                const result = [];
+                result.push(this.definitions.find(obj => {
+                    return obj.id === this.filter.id
+                }))
+                return result
+            }
+            if (this.filter.name) {
+                const result = [];
+                this.definitions.forEach(def => {
+                    let label = def.label.toLowerCase()
+                    let tag = def.tag.toLowerCase()
+                    let filter = this.filter.name.toLowerCase();
+                    if (label.includes(filter) || tag.includes(filter)) result.push(def)
+                })
+                return result
+            }
+            return this.definitions
+        }
     },
 
     methods: {

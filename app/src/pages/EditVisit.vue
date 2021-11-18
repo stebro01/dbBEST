@@ -26,14 +26,14 @@
           <q-btn v-else flat icon="maximize" @click="show_visit_data=!show_visit_data"/>
         </q-toolbar>
         <div class="row q-mt-lg" v-show="show_visit_data">
-            <div class="col-1 q-pa-xs"><q-input disable type="number" dense hint="VisitID" v-model.number=queryresult_visits.id /></div>
-            <div class="col-8 q-pa-xs"><q-input :disable=isProtected dense hint="Label/Name" v-model=queryresult_visits.label @blur="data_changed=true" /></div>
-            <div class="col-3 q-pa-xs"><q-select :disable=isProtected  v-model="queryresult_visits.study_ref_id" :options="options_study_ref" dense hint="zugeordnete Studie" @blur="data_changed=true" /></div> 
-            <div class="col-5 q-pa-xs"><q-input :disable=isProtected  type="date" dense hint="Datum(Beginn)" v-model="queryresult_visits.date_start" @blur="data_changed=true" /></div>
-            <div class="col-4 q-pa-xs"><q-input :disable=isProtected type="date" dense hint="Datum(Ende)" v-model="queryresult_visits.date_end" @blur="data_changed=true"/></div>
-            <div class="col-3 q-pa-xs"><q-select :disable=isProtected  v-model="queryresult_visits.user_id" :options="options_user" dense hint="Untersucher" @blur="data_changed=true" /></div> 
-
-            <div class="col-12 q-pa-xs"><q-input  :disable=isProtected  autogrow dense hint="Beschreibung" v-model=queryresult_visits.description @blur="data_changed=true"/></div>
+            <div class="col-1 q-pl-xs"><q-input disable type="number" dense hint="VisitID" v-model.number=queryresult_visits.id /></div>
+            <div class="col-8 q-pl-xs"><q-input :disable=isProtected dense hint="Label/Name" v-model=queryresult_visits.label @blur="data_changed=true" /></div>
+            <div class="col-3 q-pl-xs"><q-select :disable=isProtected  v-model="queryresult_visits.study_ref_id" :options="options_study_ref" dense hint="zugeordnete Studie" @blur="data_changed=true" /></div> 
+            <div class="col-5 q-pl-xs"><q-input :disable=isProtected  type="date" dense hint="Datum(Beginn)" v-model="queryresult_visits.date_start" @blur="data_changed=true" /></div>
+            <div class="col-4 q-pl-xs"><q-input :disable=isProtected type="date" dense hint="Datum(Ende)" v-model="queryresult_visits.date_end" @blur="data_changed=true"/></div>
+            <div class="col-3 q-pl-xs"><q-select :disable=isProtected  v-model="queryresult_visits.user_id" :options="options_user" dense hint="Untersucher" @blur="data_changed=true" /></div> 
+            <div class="col-4 q-pl-xs"><q-select :disable=isProtected  v-model="queryresult_visits.diagnosis_id" :options="options_diagnosis" dense hint="Arbeitsdiagnose" @blur="data_changed=true" /></div> 
+            <div class="col-8 q-pl-xs"><q-input  :disable=isProtected  autogrow dense hint="Beschreibung" v-model=queryresult_visits.description @blur="data_changed=true"/></div>
         </div>
 
         <!-- HOVER BUTTON -->
@@ -44,7 +44,7 @@
       </div>
 
       <!-- QUEST_LIST -->
-      <div class="col q-mt-md">
+      <div class="col q-my-lg">
         <QUEST_LIST :visit_id="visit_id" :isprotected="queryresult_visits.protected"
           :quest_list_must_save="quest_list_must_save"
           :data_changed_quest="data_changed_quest"
@@ -71,6 +71,7 @@ export default {
       queryresult_patient: [],
       options_study_ref: [],
       options_user: [],
+      options_diagnosis: [],
       datenow: Date.now(),
       visit_id: undefined,
       data_changed: false,
@@ -112,6 +113,7 @@ export default {
       // UPDATE Untersucher und StudyRef
       this.loadRefs({table: 'study_ref', select: 'label, description, id', update_ref: true, tag_options: 'options_study_ref', tag_results: 'queryresult_visits', tag_id_ref: 'study_ref_id'})
       this.loadRefs({table: 'users', select: 'label, id', update_ref: true, tag_options: 'options_user', tag_results: 'queryresult_visits', tag_id_ref: 'user_id'})
+      this.loadRefs({table: 'diagnosis', select: 'label, id', update_ref: true, tag_options: 'options_diagnosis', tag_results: 'queryresult_visits', tag_id_ref: 'diagnosis_id'})
     },
 
     saveVisit() {     
@@ -119,6 +121,7 @@ export default {
         const values = JSON.parse(JSON.stringify(this.queryresult_visits))
         if (values.study_ref_id) values.study_ref_id = values.study_ref_id.id
         if (values.user_id) values.user_id = values.user_id.id
+        if (values.diagnosis_id) values.diagnosis_id = values.diagnosis_id.id
         this.saveEntry({table: 'visits', id: this.visit_id, values: values})
         this.data_changed = false
       }

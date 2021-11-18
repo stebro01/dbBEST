@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="column text-center">
+    <div class="column text-center my-list-item">
 
       <div class="col">
         <q-file v-model="filename" label="wähle DB aus" 

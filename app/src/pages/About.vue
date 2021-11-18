@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="column">
+    <div class="column my-list-item">
       <div class="col text-h6">
         Über diese App
       </div>

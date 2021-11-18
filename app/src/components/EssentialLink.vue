@@ -1,5 +1,6 @@
 <template>
   <q-item
+    :disable="!(level === 0 || $store.getters.SETTINGS.user_type >= level)"
     clickable
     tag="a"
     target="_blank"
@@ -45,6 +46,11 @@ export default defineComponent({
     icon: {
       type: String,
       default: ''
+    },
+
+    level: {
+      type: Number,
+      default: null
     }
   }
 })

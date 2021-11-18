@@ -66,46 +66,6 @@
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
-
-  {
-    title: 'Startseite',
-    caption: 'Startseite',
-    icon: 'code',
-    link: 'start'
-  },
-  {
-    title: 'Patienten',
-    caption: 'suchen, anlegen, Visiten planen',
-    icon: 'person',
-    link: 'Patients'
-  },
-  {
-    title: 'Fragebögen verwalten',
-    caption: 'verwaltet den Table `list_quests` in der SQLITE DB',
-    icon: 'toc',
-    link: 'Tables'
-  },
-  {
-    title: 'DB auswählen',
-    caption: 'wähle eine SQLITE DB im Dateisystem',
-    icon: 'school',
-    link: 'selectDB'
-  },
-  {
-    title: 'Einstellungen',
-    caption: 'DB, Nutzer etc.',
-    icon: 'settings',
-    link: 'Settings'
-  },
-    {
-    title: 'Über diese App',
-    caption: 'Infos und Disclaimer',
-    icon: 'info',
-    link: 'About'
-  }
-];
-
 
 export default {
   name: 'MainLayout',
@@ -117,7 +77,7 @@ export default {
     data() {
     return {
       leftDrawerOpen: false,
-      essentialLinks: linksList
+      essentialLinks: this.$store.getters.ENV.linksList
     }
   },
 

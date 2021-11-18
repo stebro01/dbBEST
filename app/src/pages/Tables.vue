@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="colum text-center">
+    <div class="colum text-center my-list-item">
       <div class="col">
         <div class="text-h6">Fragebögen & Definitionen verwalten</div>
           <div class="text-right">

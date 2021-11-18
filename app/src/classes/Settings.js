@@ -63,7 +63,7 @@ class Settings {
         const data = { //values should be initialized with null!!!
             filename: null,
             user: null,
-            password: null,
+            user_type: null,
             show_hidden: false,
             search: null
         }
@@ -79,7 +79,7 @@ class Settings {
     }
 
     /**
-     * @example SETTINGS.data = {filename: './db.db'}
+     * @example SETTINGS.data = {label: 'user', value: './db.db'}
      */
     set data(payload) {
         console.log('Settings -> data', payload)

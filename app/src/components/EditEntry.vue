@@ -1,6 +1,6 @@
 <template>
     <q-dialog v-model="prompt" persistent>
-      <q-card style="min-width: 350px">
+      <q-card class="my-list-item">
         <q-card-section class="row items-center q-pb-none" >
           <div class="text-h6"><q-icon v-if="PROTECTED" name="lock"/>Eintrag ändern <span class="text-caption">(ID: {{local_data.id}})</span></div>
 

@@ -28,8 +28,10 @@
           </q-item-section>
         <!-- END ITEM -->
         </q-item>
-        <div v-if="expand[ind]">
+        <div v-if="expand[ind]" class="q-mb-lg">
+          <q-scroll-area style="height: 350px; width: 100%">
           <RENDER_QUEST :label="item.label" :quest="item.value" :disable="item.value.protected===1" @change="questModified(ind)"/>
+          </q-scroll-area>
         </div>
         <q-separator />
       </div>

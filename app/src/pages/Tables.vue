@@ -3,13 +3,14 @@
     <div class="colum text-center my-list-item">
       <div class="col">
         <div class="text-h6">Fragebögen & Definitionen verwalten</div>
-          <div class="text-right">
+          <div class="absolute-bottom-right z-top">
          <q-toggle v-model="show_hiden" label="zeige geschützte an" @click="toggle_show_hidden" />
         </div>
 
       </div>
 
       <div class="col">
+        <q-scroll-area style="height: 250px; width: 100%">
         <TABLE_LIST 
           @refresh="queryDB(table_list_quests, 'queryresult')" 
           @deleteItem="deleteItem($event, table_list_quests)"
@@ -19,9 +20,11 @@
           :data="queryresult" :datenow="datenow" :title="'quests_*'"
           :show_hidden="show_hiden"
         />
+        </q-scroll-area>
         
       </div>
       <div class="col q-mt-xl">
+        <q-scroll-area style="height: 250px; width: 100%">
           <TABLE_LIST 
           @refresh="queryDB(table_def, 'query_definitions')" 
           :data="query_definitions" 
@@ -33,6 +36,7 @@
           :no_add="true"
           @setProtected="setProtected($event, table_def)"
         />
+        </q-scroll-area>
        
       </div>
     </div>

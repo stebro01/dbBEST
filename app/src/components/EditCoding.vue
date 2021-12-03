@@ -3,14 +3,15 @@
       coding: 
       <q-btn :disable="PROTECTED" round icon="add" @click="addEntry"/>
       <q-btn @click="exportCoding" flat no-caps>Export</q-btn>
+      <q-scroll-area style="height: 250px; width: 100%">
       <q-list v-if="local_data">
           <q-item v-for="(item, ind) in local_data" :key="ind + 'coding'">
               <div class="row">
                     <div class="col-11">
                         <div class="row">
-                            <q-input class="col-2" :disable="item.definition_id !== null" dense v-model="item.tag" hint="tag" @blur="updateEntry()" />
-                            <q-input class="col-3 q-pl-xs" :disable="item.definition_id !== null" dense v-model="item.label" hint="label" @blur="updateEntry()" />
-                            <q-select  class="col-3 q-pl-xs" :disable="item.definition_id !== null" dense v-model="item.type" :options="type_types" hint="type" @blur="updateEntry()" />
+                            <q-input class="col-3"  dense v-model="item.tag" hint="tag" @blur="updateEntry()" />
+                            <q-input class="col-3 q-pl-xs" dense v-model="item.label" hint="label" @blur="updateEntry()" />
+                            <q-select  class="col-2 q-pl-xs" :disable="item.definition_id !== null" dense v-model="item.type" :options="type_types" hint="type" @blur="updateEntry()" />
 
                             <!-- DEFINTIONS -->
                             <div class=" q-pl-md col-4">
@@ -34,6 +35,7 @@
               </div>
           </q-item>
       </q-list>
+      </q-scroll-area>
 
       <!-- MODAL LIST DEFINITIONS -->
       <q-dialog v-model="prompt_def" persistent>
@@ -64,9 +66,9 @@
                                 <q-item-label >{{def.label}}</q-item-label>
                                 <q-item-label caption>ID: {{def.id}}</q-item-label>
                             </q-item-section>
-                            <q-item-section>
-                                <q-item-label>tag: {{def.tag}} / type: {{def.type}}</q-item-label>
-                                <q-item-label caption>{{def.system}}: {{def.code}}</q-item-label>
+                            <q-item-section >
+                                <q-item-label lines="1">tag: {{def.tag}} / type: {{def.type}}</q-item-label>
+                                <q-item-label  lines="1" caption>{{def.system}}: {{def.code}}</q-item-label>
                             </q-item-section>
                             <q-item-section side>
                                 <q-item-label v-if="def.range === 1">
@@ -173,8 +175,8 @@ export default {
         selectDefinition(def) {
             this.prompt_def = false
             if (this.active_entry !== null) {
-                this.local_data[this.active_entry].tag = def.tag;
-                this.local_data[this.active_entry].label = def.label;
+                if (!this.local_data[this.active_entry].tag) this.local_data[this.active_entry].tag = def.tag;
+                if (!this.local_data[this.active_entry].label) this.local_data[this.active_entry].label = def.label;
                 this.local_data[this.active_entry].type = def.type;
                 this.local_data[this.active_entry].definition_id = def.id;
                 this.updateEntry()

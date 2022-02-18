@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "quasar dev -m electron -t mat",
     "build": "quasar build -m electron -t mat",
+    "build4win": "quasar build --mode electron --target win32 --arch x64",
     "cy": "npm run test:e2e",
     "doc": "jsdoc -r -c jsdoc.conf.json",
     "manual": "sphinx-build -b html manual/ manual/_build/html",
